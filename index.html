@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<!--
+  Copyright 2014 The Chromium Authors. All rights reserved.
+  Use of this source code is governed by a BSD-style license that can be
+  found in the LICENSE file.
+  -->
+
+<head>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
+  <title>Messaging</title>
+  <link href="style.css" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script>
+    // window.AbortController = undefined
+  </script>
+  <script src="env-config.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.js"></script>
+  <script type="text/javascript" src="pilot.1.0.2.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cms.spilot.io/pilot.obs.min.js"></script> -->
+</head>
+
+<body style="background: #000000" data-name="sigma_drm" data-tools="pnacl glibc clang-newlib win"
+  data-configs="Debug Release" data-path="{tc}/{config}">
+  <div class="container">
+    <div id="time-log" style="color:#fff"></div>
+    <div class="video-player">
+      <video id="video" autoplay controls muted></video>
+      <br />
+      <input style="width: 480px;" type="text" id="url">
+      <button style="width: 42px; margin-left: 0.5rem;" id="play" onclick="play()">Play</button>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
