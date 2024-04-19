@@ -1,57 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In with Google</title>
-</head>
-<body>
-  <h1>Sign In with Google</h1>
-  <div id="google-signin-button"></div>
-
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script>
-    function onSignIn(googleUser) {
-      // Handle successful sign-ins
-      var profile = googleUser.getBasicProfile();
-      console.log('ID: ' + profile.getId());
-      console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
-      console.log('Email: ' + profile.getEmail());
-    }
-
-    function signOut() {
-      // Handle sign-out
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
-    }
-
-    function init() {
-      gapi.load('auth2', function() {
-        gapi.auth2.init({
-          client_id: '271988713615-3f49f6kv09983ootp4einbjl7luf0qm0.apps.googleusercontent.com'
+<html>
+  <body>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script>
+      function handleCredentialResponse(response) {
+        console.log("Encoded JWT ID token: " + response.credential);
+      }
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: "271988713615-qre9r4j95ttut2el0jlk93ree7inh9o9.apps.googleusercontent.com",
+          callback: handleCredentialResponse
         });
-        attachSignin(document.getElementById('google-signin-button'));
-      });
-    }
-
-    function attachSignin(element) {
-      gapi.signin2.render(element, {
-        'scope': 'profile email',
-        'width': 200,
-        'height': 40,
-        'longtitle': true,
-        'theme': 'dark',
-        'onsuccess': onSignIn,
-        'onfailure': function(error) {
-          console.error("Google sign-in failed:", error);
-        }
-      });
-    }
-
-    window.onload = init;
-  </script>
-</body>
+        google.accounts.id.renderButton(
+          document.getElementById("buttonDiv"),
+          { theme: "outline", size: "medium" }  // customization attributes
+        );
+        google.accounts.id.prompt(); // also display the One Tap dialog
+      }
+    </script>
+    <div id="buttonDiv"></div>
+  </body>
 </html>
