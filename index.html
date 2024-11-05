@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shaka Player with Raw Key Encryption</title>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/shaka-player.compiled.js"></script>
+    <style>
+        video {
+            width: 40%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" controls></video>
+    <input type="text" name="" id="man">
+    <button id="btn">OK</button>
+    <script>
+        async function initApp(manifestUri) {
+            // if (!shaka.polyfill.isInstalled()) {
+                shaka.polyfill.installAll();
+            // }
+
+            const video = document.getElementById('video');
+            const player = new shaka.Player(video);
+
+            player.addEventListener('error', (event) => {
+                console.error('Error code', event.detail.code, 'object', event.detail);
+            });
+
+            // License configuration for raw key decryption
+            player.configure({
+                drm: {
+                    servers: {
+                      'com.widevine.alpha': 'https://api-dev.sigmadrm.com:8443/license/verify/widevine'
+                    }
+                }
+            });
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                    // Add custom headers for the license request
+                    request.headers['Custom-Header'] = 'eyJtZXJjaGFudElkIjoia2llbnR2IiwiYXBwSWQiOiJraWVuX3giLCJ1c2VySWQiOiJ1c2VyIGlkIiwic2Vzc2lvbklkIjoic2Vzc2lvbiBpZCIsInJlcUlkIjoiMTM5YjYwNzAtOWE4ZC0yNzkxLWIxNDMtOTRmMTNjMjQwZmQzIiwiZGV2aWNlSW5mbyI6IntcImRldmljZUlkXCI6XCJjNzczMmZmYy02YmUyLWZlM2QtMDA5OC02Y2FkNjk3NGJkYmNcIixcInBhY2thZ2VOYW1lXCI6XCJEUk1QYWNrZXJcIixcInBhY2thZ2VJZFwiOlwic2RybS10ZXN0Lmd2aWV0LnZuXCIsXCJhcHBWZXJzaW9uQ29kZVwiOlwiMS4wLjVcIixcImxheW91dFwiOlwiQmxpbmtcIixcInBsYXRmb3JtXCI6XCJ3ZWJcIixcIm5hbWVcIjpcIkNocm9tZVwiLFwidmVyc2lvblwiOlwiMTMwLjAuMC4wXCIsXCJkZXNjcmlwdGlvblwiOlwiQ2hyb21lIDEzMC4wLjAuMCBvbiBXaW5kb3dzIDEwIDY0LWJpdFwifSJ9'; // Add any other custom headers you need
+                }
+            }); // Replace with actual path to manifest
+
+            try {
+                await player.load(manifestUri);
+                console.log('The video has now been loaded!');
+            } catch (error) {
+                console.error('Error loading video:', error);
+            }
+        }
+        document.getElementById("btn").addEventListener("click", () => {
+          initApp(document.getElementById("man").value)
+        })
+
+    </script>
+</body>
+</html>
